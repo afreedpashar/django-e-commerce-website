@@ -27,8 +27,11 @@
                  Rs{{product.price}}
                 </strike>
                 Rs{{product.sale_price}}
+
                 {% else %}
                 Rs({{ product.price }})
+                <br>ID:{{ product.id }}
+
                 {% endif %}
                 </center>
             </div>
@@ -36,9 +39,29 @@
         </div>
     </div>
     <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
-
+    <button type="button" value="{{ product.id }}" class="btn btn-secondary" id="add-cart"> Add to Cart</button>
     <br>
     <br>
     <br>
 </div>
+<script>
+    $(document).on('click','#add-cart',function(e){
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url : '{% url "cart_add" %}',
+            data : {
+                product_id : $('#add-cart').val(),
+                csrfmiddlewaretoken : '{{ csrf_token }}',
+                action : 'post'
+            },
+            success:function(json){
+                console.log(json)
+            },
+            error:function(xhr,errmsg,err){
+
+            }
+        });
+    });
+</script>
 {% endblock %}
